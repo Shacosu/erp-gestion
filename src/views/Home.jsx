@@ -44,12 +44,12 @@ export default function Home() {
     setDisable(false)
   }
 
-  function currencyFormatter({ currency, value}) {
+  function currencyFormatter({ currency, value }) {
     const formatter = new Intl.NumberFormat('en-US', {
       style: 'currency',
       minimumFractionDigits: 0,
       currency
-    }) 
+    })
     return formatter.format(value)
   }
 
@@ -95,15 +95,15 @@ export default function Home() {
           </div>
         </div>
         <div className="col-span-6 text-end space-x-2">
-            <button type="button" className="bg-green-600 hover:bg-green-700 text-white p-2 rounded disabled:bg-gray-300" disabled={disable} onClick={handleRefresh}>
+          <button type="button" className="bg-green-600 hover:bg-green-700 text-white p-2 rounded disabled:bg-gray-300" disabled={disable} onClick={handleRefresh}>
             ↻ Actualizar
-            </button>
+          </button>
           <button className="bg-indigo-500 hover:bg-indigo-600 text-white p-2 rounded">
             + Agregar
           </button>
         </div>
       </form>
-      <table className="border w-7/12 mt-5 text-center">
+      <table className="border w-full mt-5 text-center">
         <tbody>
           <tr className="border-b">
             <th>Proveedor</th>
@@ -112,13 +112,14 @@ export default function Home() {
             <th>Descuento</th>
             <th>Categoria</th>
             <th>Actualizado</th>
+            <th>Eliminar</th>
           </tr>
           {!isFetching ? (
             gamesData?.map(
               ({ _id, title, category, price, url, updatedAt, discount, provider }) => (
                 <tr key={_id} className="border">
-                  <td className="bg-yellow-500 italic">
-                    {provider.replace(".com", "")}
+                  <td className={`bg-yellow-500 italic ${provider == "chilejuegosdigitales.cl" && "!bg-blue-500"}`}>
+                    {provider}
                   </td>
                   <td>
                     <a
@@ -129,19 +130,21 @@ export default function Home() {
                       {title}
                     </a>
                   </td>
-                  <td>{currencyFormatter({currency: "CLP", value: price})}</td>
+                  <td>{currencyFormatter({ currency: "CLP", value: price })}</td>
                   <td
-                    className={`text-white ${
-                      Number(discount.replace(/\-|%/g, "")) > 30
+                    className={`text-white ${Number(discount?.replace(/\-|%/g, "")) > 30
                         ? "bg-green-500"
                         : "bg-red-500"
-                    }`}
+                      }`}
                   >
-                    {discount.replace("-", "")}
+                    {discount?.replace("-", "")}
                   </td>
                   <td>{category.name}</td>
                   <td>
                     {updatedAt.substring(0, 10)} - {updatedAt.substring(11, 19)}
+                  </td>
+                  <td>
+                    <button className="bg-red-800 hover:bg-red-900 text-white text-sm rounded-lg p-1">Eliminar</button>
                   </td>
                 </tr>
               )
